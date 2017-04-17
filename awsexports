@@ -1,0 +1,1 @@
+export EC2_JVM_ARGS="Dhttps.proxyHost=VARPROXY -Dhttps.proxyPort=8080 -Dhttp.proxyHost=VARPROXY -Dhttp.proxyPort=8080"

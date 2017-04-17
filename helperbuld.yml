@@ -1,0 +1,64 @@
+---
+- hosts: '{{ target }}'
+  vars:
+    password1: $6$J9i1l5hv$g3j0II1Fkk7xWzkAbRYYzqW2v.HjZTd7Du5FtnFEBVhIv7nJtlUE/FQHCIRhZjSnk9Jnj5JG/gSlmpHQBeQn60
+    linuser: test
+    ser: ['snmpd', 'yum-conf']
+    ports: 
+      - 161
+      - 162
+  remote_user: csr
+  tasks: 
+  - name: install snmpd
+    yum: 
+      name=net-snmp 
+      state=latest
+  - name: install yum-cron
+    yum: 
+      name=yum-cron 
+      state=latest
+  - name: create user {{ linuser }}
+    user: 
+      name={{ linuser }}
+      groups=wheel
+      append=yes
+      password={{ password1 }}    
+  - name: update sudoers file
+    replace: 
+      dest=/etc/sudoers
+      regexp='^%wheel'
+      replace='wheel'
+      backup=yes
+  - name: copy proxy files
+    copy: 
+      src=/etc/ansible/group_vars/awsexports
+      dest=/home/csr/awsexports
+  - name: update proxy files        
+    replace: 
+      dest=/home/csr/awsexports
+      regexp='VARPROXY'
+      replace={{proxy}}
+  - name: update iptables SNMP traps
+    iptables_raw:
+      name: allow SNMP traps
+      rules: '-A INPUT -p udp -m udp --dport 161 -j ACCEPT'
+  - name: update iptables SNMP polls    
+    iptables_raw:
+       name: allow SNMP polls
+       rules: '-A INPUT -p udp -m udp --dport 162 -j ACCEPT'
+       #  - name: update yum proxy
+       # lineinfile:
+         # dest: /etc/yum.conf
+         # regexp: 'proxy'
+         # backup: yes
+         # line: 'proxy=http://{{ proxy }}:{{ proxyport }}'
+         #- name: copy crontab
+         #copy:
+           #src: /etc/ansible/group_vars/awsexports
+           #dest: /home/csr/crontab
+          
+    
+            
+
+    
+...	
