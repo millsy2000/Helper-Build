@@ -1,5 +1,7 @@
 ---
-- hosts: '{{ target }}'
+- hosts: "{{ target }}"
+  remote_user: csr
+  become: true
   vars:
     password1: $6$J9i1l5hv$g3j0II1Fkk7xWzkAbRYYzqW2v.HjZTd7Du5FtnFEBVhIv7nJtlUE/FQHCIRhZjSnk9Jnj5JG/gSlmpHQBeQn60
     linuser: test
@@ -7,12 +9,17 @@
     ports: 
       - 161
       - 162
-  remote_user: csr
+    packages:
+      - yum-cron
+      - net-snmp
+      - net-snmp-libs
+      - net-snmp-utils 
   tasks: 
   - name: install snmpd
     yum: 
-      name=net-snmp 
-      state=latest
+      name: "{{ packages }}"
+      state: latest
+    with_items: "{{ packages }}"
   - name: install yum-cron
     yum: 
       name=yum-cron 
