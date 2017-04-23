@@ -63,7 +63,18 @@
          #copy:
            #src: /etc/ansible/group_vars/awsexports
            #dest: /home/csr/crontab
-          
+  - name: copy network interface
+    copy:
+      src: '/etc/ansible/group_vars/ifcfg-enp0s3:0'
+      dest: '/etc/sysconfig/network-scripts/ifcfg-enp0s3:0'
+  - name: update network interface configuration
+    replace:
+      dest: '/etc/sysconfig/network-scripts/ifcfg-enp0s3:0'
+      regexp: 'IP_ADD'
+      replace: "{{ mgmt_ip }}"
+  - name: restart networking
+    shell: systemctl restart network    
+
     
             
 
