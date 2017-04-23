@@ -1,0 +1,8 @@
+TYPE="Ethernet"
+BOOTPROTO="none"
+NAME="enp0s3:0"
+DEVICE="enp0s3:0"
+ONBOOT="yes"
+NETMASK="255.255.255.255"
+IPADDR="IP_ADD"
+USERCTL="yes"
