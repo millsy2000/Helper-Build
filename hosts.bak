@@ -1,0 +1,15 @@
+[prodhelpers]
+helper1 anisble_host=10.0.0.15 mgmt_ip=10.1.0.1
+
+[prehelpers]
+helper2 ansible_host=10.0.0.16 ansible_ssh_private_key_file=helper2.pem 
+
+[prodhelpers:vars]
+proxy=8.8.8.8
+proxyport=8080
+
+[prehelpers:vars]
+proxy=8.8.4.4
+proxyport=8080
+
+
